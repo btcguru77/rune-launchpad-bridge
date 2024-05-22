@@ -31,3 +31,17 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: "IndieFlower";
+  src: local("IndieFlower"),
+    url("../public/fonts/Indie_Flower/IndieFlower-Regular.ttf")
+      format("opentype");
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: IndieFlower, "opentype";
+}

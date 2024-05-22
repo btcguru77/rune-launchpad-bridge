@@ -8,7 +8,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IUniswapV2Router02} from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import {IUniswapV2Factory} from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 
-contract RunesBridge is Ownable, ERC20 {
+contract RunesBridgeAlpha is Ownable, ERC20 {
     error MaxTxAmountExceeded();
     error MaxWalletAmountExceeded();
     error NotAuthorized();
@@ -34,7 +34,7 @@ contract RunesBridge is Ownable, ERC20 {
 
     mapping(address => bool) private _isExcludedFromFees;
 
-    constructor() ERC20("RunesBridge", "RB") Ownable(_msgSender()) {
+    constructor() ERC20("RunesBridgeAlpha", "RBA") Ownable(_msgSender()) {
         platformAndRewards = _msgSender();
         pair = IUniswapV2Factory(router.factory()).createPair(
             address(this),

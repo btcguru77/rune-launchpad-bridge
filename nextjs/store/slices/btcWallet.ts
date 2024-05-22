@@ -26,7 +26,7 @@ const initialState = {
   },
 };
 
-export const wallet = createSlice({
+export const btcWallet = createSlice({
   name: "btcWallet",
   initialState: initialState,
   reducers: {
@@ -53,5 +53,5 @@ export const {
   updateBtcFeeRate,
   updateBtcAddress,
   updateBtcPubkey
-} = wallet.actions;
-export default wallet.reducer;
+} = btcWallet.actions;
+export default btcWallet.reducer;

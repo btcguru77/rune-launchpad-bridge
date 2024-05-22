@@ -2,15 +2,17 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import thunk from "redux-thunk"
+import openAPIReducer from "./slices/openApi";
 import btcWalletReducer from './slices/btcWallet'
 
 const persistConfig = {
-  key: 'runesbridge',
+  key: 'runesbridgeAlpha',
   storage,
 }
 
 const rootReducer = combineReducers({
-  btcWalletReducer
+  btcWalletReducer,
+  openAPIReducer,
 })
 
 const makeConfiguredStore = () =>
@@ -30,6 +32,7 @@ export const makeStore = () => {
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
           serializableCheck: false,
+          
         }),
     })
     store.__persistor = persistStore(store)

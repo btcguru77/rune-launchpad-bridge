@@ -3,9 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   updateBtcPrice,
-  updateBtcAddress,
-  updateBtcPubkey,
+  updateBtcAddresses,
+  // updateBtcPubkey,
   updateBtcNetwork,
+  disconnectBtcWallet,
 } from "@/store/slices/btcWallet";
 // import { currentPrice } from "@/utils";
 import { useDispatch } from "react-redux";
@@ -14,6 +15,7 @@ import {
   sendBtcTransaction,
   AddressPurpose,
   BitcoinNetworkType,
+  Address,
 } from "sats-connect";
 import { useBtcWalletData } from "@/store/hooks";
 import { useWallets, useWallet } from "@wallet-standard/react";
@@ -91,14 +93,16 @@ const Wallet = (props) => {
     try {
       const getAddressOptions = {
         payload: {
-          purposes: [AddressPurpose.Payment],
+          purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals],
           message: "Address for receiving payments",
           network: {
             type: btcNetwork,
           },
         },
         onFinish: (response) => {
-          dispatch(updateBtcAddress(response.addresses[0].address));
+          console.log("addresses", response);
+
+          dispatch(updateBtcAddresses(response.addresses));
           setBtcConnected(true);
           setSelectedBtcWallet("xverse");
         },
@@ -190,7 +194,7 @@ const Wallet = (props) => {
 
   const DisconnectWallet = () => {
     setBtcConnected(false);
-    dispatch(updateBtcAddress(""));
+    dispatch(disconnectBtcWallet());
     setWallet(null);
   };
 

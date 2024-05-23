@@ -1,10 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { BitcoinNetworkType } from "sats-connect";
+import { AddressPurpose, BitcoinNetworkType } from "sats-connect";
 
-const initialState = {
+export const initialState = {
   network: BitcoinNetworkType.Testnet,
-  address: "",
-  pubkey: "",
+  addresses: [
+    {
+      address: "",
+      pubkey: "",
+      purpose: AddressPurpose.Payment
+    },
+    {
+      address: "",
+      pubkey: "",
+      purpose: AddressPurpose.Ordinals
+    },
+  ],
   price: 60000,
   feeOptions: [
     {
@@ -42,12 +52,15 @@ export const btcWallet = createSlice({
         { title: "Custom", feeRate: 0 },
       ];
     },
-    updateBtcAddress: (state, action) => {
-      state.address = action.payload;
+    updateBtcAddresses: (state, action) => {
+      state.addresses = action.payload;
     },
-    updateBtcPubkey: (state, action) => {
-      state.pubkey = action.payload;
-    },
+    // updateBtcPubkey: (state, action) => {
+    //   state.pubkey = action.payload;
+    // },
+    disconnectBtcWallet: (state) => {
+      state.addresses = initialState.addresses
+    }
   },
 });
 
@@ -55,7 +68,8 @@ export const {
   updateBtcNetwork,
   updateBtcPrice,
   updateBtcFeeRate,
-  updateBtcAddress,
-  updateBtcPubkey
+  updateBtcAddresses,
+  disconnectBtcWallet,
+  // updateBtcPubkey
 } = btcWallet.actions;
 export default btcWallet.reducer;

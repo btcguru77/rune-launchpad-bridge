@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { forwardRef, useContext, useState } from "react";
 import {
   Menu,
   MenuButton,
@@ -14,14 +14,6 @@ import {
 import Link from "next/link";
 import { useBtcAddress } from "@/store/hooks";
 import toast from "react-hot-toast";
-
-import Wallet from "sats-connect";
-import {
-  AddressPurpose,
-  BitcoinNetworkType,
-  getAddress,
-  type Address,
-} from "sats-connect";
 import BtcNetwork from "./BtcNetwork";
 import { WalletContext } from "@/context/wallet";
 import { addressFormat, copyToClipboard } from "@/utils";
@@ -29,9 +21,7 @@ import { addressFormat, copyToClipboard } from "@/utils";
 const AppBar = () => {
   const wallet = useContext(WalletContext);
   const [btcDialog, setBtcDialog] = useState(false);
-  const { btcAddress } = useBtcAddress();
-
-  const handleBtcConnect = async () => {};
+  const { taproot } = useBtcAddress();
 
   return (
     <>
@@ -39,27 +29,72 @@ const AppBar = () => {
         <div
           className={`flex justify-between bg-white items-center fixed top-0 left-1/2 -translate-x-1/2 z-40 px-3 rounded-none w-full`}
         >
-          <Link
-            href="/"
-            className="flex justify-center items-center text-xl font-bold"
-          >
-            <img
-              src="/favicon.ico"
-              alt="favicon"
-              className="sm:w-[45px] w-[35px] rounded-md my-2 mx-3"
-            />
-            RunesBridgeAlpha
-          </Link>
+          <div className="text-right flex px-2 items-center">
+            <Link
+              href="/"
+              className="flex justify-center items-center text-xl font-bold mr-5"
+            >
+              <img
+                src="/favicon.ico"
+                alt="favicon"
+                className="sm:w-[45px] w-[35px] rounded-md my-2 mx-3"
+              />
+              RunesBridgeAlpha
+            </Link>
+            <Menu>
+              <MenuButton className="inline-flex items-center gap-2 rounded-md border-black/5 py-1.5 px-3 text-sm/6 font-semibold text-black shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-black/5 data-[focus]:outline-1 data-[focus]:outline-black">
+                Runes
+              </MenuButton>
+              <Transition
+                enter="transition ease-out duration-75"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <MenuItems
+                  anchor="bottom start"
+                  className="z-50 origin-top-right rounded-xl border border-black/5 bg-black/5 p-1 text-sm/6 text-black [--anchor-gap:var(--spacing-1)] focus:outline-none"
+                >
+                  <MenuItem>
+                    <Link
+                      href={"/etch"}
+                      className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
+                    >
+                      Etch
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      href={"/mint"}
+                      className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
+                    >
+                      Mint
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      href={"/transfer"}
+                      className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
+                    >
+                      Transfer
+                    </Link>
+                  </MenuItem>
+                </MenuItems>
+              </Transition>
+            </Menu>
+          </div>
           <div className="text-right">
             <Menu>
               <MenuButton
-                onClick={!btcAddress ? () => setBtcDialog(true) : null}
+                onClick={!taproot ? () => setBtcDialog(true) : null}
                 className="inline-flex items-center gap-2 rounded-s-xl bg-gray-800 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white"
               >
-                {btcAddress ? addressFormat(btcAddress) : "Connect BTC"}
+                {taproot ? addressFormat(taproot) : "Connect BTC"}
               </MenuButton>
 
-              {btcAddress ? (
+              {taproot ? (
                 <>
                   <Transition
                     enter="transition ease-out duration-75"
@@ -77,11 +112,11 @@ const AppBar = () => {
                         <Button
                           className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
                           onClick={() => {
-                            copyToClipboard(btcAddress as string);
+                            copyToClipboard(taproot as string);
                             toast.success("copied");
                           }}
                         >
-                          {addressFormat(btcAddress)}
+                          {addressFormat(taproot)}
                         </Button>
                       </MenuItem>
                       <MenuItem>

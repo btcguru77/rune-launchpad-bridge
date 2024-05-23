@@ -1,12 +1,18 @@
 import { useSelector } from "react-redux";
-import { BitcoinNetworkType } from "sats-connect";
+import { AddressPurpose, BitcoinNetworkType } from "sats-connect";
 
 interface IOpenApiReducer {
   deviceId: string
 }
+
+interface IAddress {
+  address: string,
+  pubkey: string,
+  purpose: AddressPurpose
+}
 interface IBtcWalletReducer {
   network: BitcoinNetworkType,
-  address: string | string[],
+  addresses: IAddress[],
   pubkey: string | string[],
   price: number,
   feeOptions: any
@@ -31,10 +37,13 @@ export const useBtcAddress = () => {
   const wallet = useSelector(
     (state: IState) => state?.btcWalletReducer
   );
+  const taproot = wallet.addresses?.find((a) => a.purpose === AddressPurpose.Ordinals)?.address || ''
+  const nestedsegwit = wallet.addresses?.find((a) => a.purpose === AddressPurpose.Payment)?.address || ''
+
   try {
-    return { btcAddress: wallet.address };
+    return { taproot, nestedsegwit };
   } catch (error) {
-    return { btcAddress: "" };
+    return { taproot: "", nestedsegwit: "" };
   }
 };
 

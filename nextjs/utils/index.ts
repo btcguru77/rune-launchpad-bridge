@@ -99,11 +99,7 @@ export function formatDate(date: Date, fmt = "yyyy-MM-dd hh:mm:ss") {
   return fmt;
 }
 
-export const currentPrice = async () => {
-  try {
-    const data = await fetch("https://mempool.space/api/v1/prices");
-    const jsonData = await data.json();
-    const currentPrice = jsonData?.USD;
-    return currentPrice;
-  } catch (error) { }
-};
+
+export function convert2RunesName (runeName: string)  {
+  return runeName.replace(/ /g, "•").toUpperCase();
+}

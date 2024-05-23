@@ -7,6 +7,7 @@ import {
   // updateBtcPubkey,
   updateBtcNetwork,
   disconnectBtcWallet,
+  updateBtcFeeRate,
 } from "@/store/slices/btcWallet";
 // import { currentPrice } from "@/utils";
 import { useDispatch } from "react-redux";
@@ -30,12 +31,16 @@ type walletContextType = {
   btcNetworkSelector: (network: any) => void;
   XverseWalletConnect: () => void;
   DisconnectWallet: () => void;
+  getFeeSummary: () => any;
+  getBtcPrice: () => any;
 };
 
 const walletContextDefault: walletContextType = {
   btcNetworkSelector: () => {},
   XverseWalletConnect: () => {},
   DisconnectWallet: () => {},
+  getFeeSummary: () => {},
+  getBtcPrice: () => {},
 };
 
 export const WalletContext =
@@ -56,15 +61,26 @@ const Wallet = (props) => {
   const [btcConnected, setBtcConnected] = useState(false);
   const [selectedBtcWallet, setSelectedBtcWallet] = useState("unisat");
 
-  // const getFeeSummary = async () => {
-  //   const result = await openApi.getFeeSummary();
-  //   return result;
-  // };
+  const getFeeSummary = async () => {
+    const data = await fetch(
+      process.env.API_ENDPOINT + "api/open-api/getFeeSummary"
+    );
+    const result = await data.json();
+    const { payload, message } = result;
+    console.log({ payload });
+    dispatch(updateBtcFeeRate({ feeRate: payload?.list }));
+    return payload;
+  };
 
-  // const getPrice = async () => {
-  //   const price = await currentPrice();
-  //   dispatch(updatePrice(price));
-  // };
+  const getBtcPrice = async () => {
+    const data = await fetch(
+      process.env.API_ENDPOINT + "api/open-api/getCurrentBtcPrice"
+    );
+    const result = await data.json();
+    const { payload, message } = result;
+    console.log({ payload });
+    dispatch(updateBtcPrice(payload));
+  };
 
   // const getBasicInfo = async () => {
   //   const unisat = window.unisat;
@@ -353,8 +369,9 @@ const Wallet = (props) => {
 
   useEffect(() => {
     if (!isMounted.current) {
-      // getPrice();
-      // DisconnectWallet();
+      getBtcPrice();
+      getFeeSummary();
+      DisconnectWallet();
       isMounted.current = true;
     }
   }, []);
@@ -364,7 +381,8 @@ const Wallet = (props) => {
       value={{
         btcNetworkSelector,
         // connectBtcWallet,
-        // getFeeSummary,
+        getFeeSummary,
+        getBtcPrice,
         // getBasicInfo,
         XverseWalletConnect,
         // OkxWalletConnect,

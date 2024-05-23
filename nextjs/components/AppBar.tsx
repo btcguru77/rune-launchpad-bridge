@@ -59,7 +59,7 @@ const AppBar = () => {
                 >
                   <MenuItem>
                     <Link
-                      href={"/etch"}
+                      href={"/runes/etch"}
                       className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
                     >
                       Etch
@@ -67,7 +67,7 @@ const AppBar = () => {
                   </MenuItem>
                   <MenuItem>
                     <Link
-                      href={"/mint"}
+                      href={"/runes/mint"}
                       className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
                     >
                       Mint
@@ -75,7 +75,7 @@ const AppBar = () => {
                   </MenuItem>
                   <MenuItem>
                     <Link
-                      href={"/transfer"}
+                      href={"/runes/transfer"}
                       className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-black/10"
                     >
                       Transfer

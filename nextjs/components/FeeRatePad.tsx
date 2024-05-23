@@ -61,14 +61,14 @@ export default function FeeRatePad({ setFeeOption }) {
                       selected && "bg-[#797979!important] text-white"
                     }`}
                   >
-                    <p className="text-center text-sm font-semibold">
+                    <p className="text-center text-md font-semibold">
                       {v.title}
                     </p>
                     {v.title !== "Custom" && (
-                      <p className="text-[9px] text-center">{`${v.feeRate} sats/vB`}</p>
+                      <p className="text-md text-center">{`${v.feeRate} sats/vB`}</p>
                     )}
                     {v.title !== "Custom" && (
-                      <p className="text-center text-[9px]">{`${v.desc}`}</p>
+                      <p className="text-center text-[12px]">{`${v.desc}`}</p>
                     )}
                   </div>
                 );

@@ -7,6 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "react-hot-toast";
 import WalletContext from "@/context/wallet";
 import { WalletStandardProvider } from "@wallet-standard/react";
+import NextNProgress from "nextjs-progressbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   const storeRef = useRef<AppStore>();
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <PersistGate loading={null} persistor={storeRef.current.__persistor}>
           <WalletStandardProvider>
             <WalletContext>
+              <NextNProgress />
               <Component {...pageProps} />
             </WalletContext>
           </WalletStandardProvider>

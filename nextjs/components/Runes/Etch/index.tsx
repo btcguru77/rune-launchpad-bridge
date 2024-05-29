@@ -1,5 +1,5 @@
 import { useBtcAddress, useBtcWalletData } from "@/store/hooks";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Wallet, { BitcoinNetworkType } from "sats-connect";
 import {
   Button,
@@ -12,11 +12,15 @@ import {
 import clsx from "clsx";
 import FeeRatePad from "@/components/FeeRatePad";
 import { convert2RunesName } from "@/utils";
+// import { WalletContext } from "@/context/wallet";
+import toast from "react-hot-toast";
 
 const EtchRunes = () => {
+  // const wallet = useContext(WalletContext);
   const { taproot, nestedsegwit } = useBtcAddress();
   const { network } = useBtcWalletData();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [totalCost, setTotalCost] = useState<number>();
   const [totalSize, setTotalSize] = useState<number>();
   const [fundTxId, setFundTxId] = useState<string>("");
@@ -39,7 +43,19 @@ const EtchRunes = () => {
     return p + m * a;
   };
 
+  const isRunesName = (value: string) => value.replace(/\s/, "").length > 13;
+
   const onClickEstimate = async () => {
+    setLoading(true);
+    if (taproot === "") {
+      // wallet.XverseWalletConnect();
+      toast.error("Please connect your wallet.");
+      setLoading(false);
+      return;
+    }
+    if (!isRunesName(runeName)) {
+      return;
+    }
     const response = await Wallet.request("runes_estimateEtch", {
       destinationAddress: destinationAddress,
       feeRate: +feeRate,
@@ -59,6 +75,7 @@ const EtchRunes = () => {
       runeName: runeName,
       network: network,
     });
+    setLoading(false);
 
     if (response.status === "success") {
       console.log({ response });
@@ -67,11 +84,22 @@ const EtchRunes = () => {
       setTotalSize(response.result.totalSize);
     } else {
       console.error(response.error);
-      alert("Error Fetching Estimate. See console for details.");
+      // alert("Error Fetching Estimate. See console for details.");
+      toast.error("Error Fetching Estimate. See console for details.");
     }
   };
 
   const onClickExecute = async () => {
+    setLoading(true);
+    if (taproot === "") {
+      // wallet.XverseWalletConnect();
+      toast.error("Please connect your wallet.");
+      setLoading(false);
+      return;
+    }
+    if (!isRunesName(runeName)) {
+      return;
+    }
     const response = await Wallet.request("runes_etch", {
       destinationAddress: destinationAddress,
       symbol: symbol || undefined,
@@ -91,12 +119,13 @@ const EtchRunes = () => {
       refundAddress: nestedsegwit,
       network,
     });
-
+    setLoading(false);
     if (response.status === "success") {
       setFundTxId(response.result.fundTransactionId);
     } else {
       console.error(response.error);
-      alert("Error sending BTC. See console for details.");
+      // alert("Error sending BTC. See console for details.");
+      toast.error("Error Fetching Estimate. See console for details.");
     }
   };
 
@@ -134,7 +163,7 @@ const EtchRunes = () => {
               required={true}
               value={symbol}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSymbol(e.currentTarget.value)
+                setSymbol(e.currentTarget.value.slice(-1))
               }
               className={clsx(
                 "mt-3 block w-full rounded-lg border-none bg-black/5 py-1.5 px-3 text-sm/6 text-black",
@@ -306,9 +335,11 @@ const EtchRunes = () => {
                   ? () => onClickExecute()
                   : () => onClickEstimate()
               }
-              className="text-center w-full rounded-xl bg-fuchsia-400 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-fuchsia-800 data-[open]:bg-fuchsia-800 data-[focus]:outline-1 data-[focus]:outline-white"
+              className={`flex justify-center text-center w-full disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none rounded-xl bg-fuchsia-400 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-fuchsia-800 data-[open]:bg-fuchsia-800 data-[focus]:outline-1 data-[focus]:outline-white`}
             >
-              {totalCost && totalSize
+              {loading
+                ? "Loading..."
+                : totalCost && totalSize
                 ? "Etching Runes"
                 : "Estimate Etching Runes"}
             </Button>
@@ -331,97 +362,11 @@ const EtchRunes = () => {
               </p>
             </div>
           )}
-        </Fieldset>
-      </div>
-      {/* <div className="card">
-        <h3>Etch Runes</h3>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            paddingRight: 100,
-            marginBottom: 20,
-          }}
-        >
-          <div>
-            <h4>Rune Name</h4>
-            <input
-              type="text"
-              value={runeName}
-              onChange={(e) => setRuneName(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>Symbol</h4>
-            <input
-              type="text"
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>Divisibility</h4>
-            <input
-              type="number"
-              value={divisibility}
-              onChange={(e) => setDivisibility(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>Premine</h4>
-            <input
-              type="number"
-              value={preMine}
-              onChange={(e) => setPreMine(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>Amount</h4>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>Mint Cap</h4>
-            <input
-              type="number"
-              value={mintCap}
-              onChange={(e) => setMintCap(e.target.value)}
-            />
-          </div>
-          <div>
-            <h4>feeRate (sats/vb)</h4>
-            <input
-              type="number"
-              value={feeRate}
-              onChange={(e) => setFeeRate(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <button onClick={onClickEstimate} disabled={!runeName || !feeRate}>
-          Estimate Etch
-        </button>
-      </div>
-
-      {totalCost && (
-        <div className="card">
-          <div>
-            <h3>Rune Name</h3>
-            <p className="success">{runeName}</p>
-          </div>
-          <div>
-            <h3>Total Cost (sats) - Total Size</h3>
-            <p className="success">
-              {totalCost} - {totalSize}
-            </p>
-          </div>
-          <button onClick={onClickExecute}>Execute Etch</button>
           {fundTxId && (
-            <div className="success">
+            <div
+              className="flex items-center bg-rose-500 text-white text-sm font-bold px-4 py-3 rounded-xl"
+              role="alert"
+            >
               Success! Click{" "}
               <a href={fundTxLink} target="_blank" rel="noreferrer">
                 here
@@ -429,8 +374,8 @@ const EtchRunes = () => {
               to see your transaction
             </div>
           )}
-        </div>
-      )} */}
+        </Fieldset>
+      </div>
     </>
   );
 };

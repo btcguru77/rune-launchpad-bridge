@@ -7,7 +7,7 @@ const nextConfig = {
     FEE_ADDRESS:
       "bc1ptgflajc2z55rsqv55778spwalrx3g240vn68yp7a88elwdevt0rqlre4ra",
     FEE: "1000",
-    API_ENDPOINT: "https://runesbridgealpha.vercel.app/", // in dev, endpoint should be "http://localhost:3000/"
+    API_ENDPOINT: "http://localhost:3000/", // in dev, endpoint should be "http://localhost:3000/"
   },
 };
 

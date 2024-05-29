@@ -1,11 +1,10 @@
 import Layout from "@/components/Layout";
-import MintRunes from "@/components/Runes/Mint";
 
-export default function Mint() {
+export default function Bridge() {
   return (
     <Layout>
       <main className={`w-full flex flex-row items-center justify-around p-5`}>
-        <MintRunes />
+        bridges
       </main>
     </Layout>
   );

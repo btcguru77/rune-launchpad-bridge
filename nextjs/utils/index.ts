@@ -100,6 +100,6 @@ export function formatDate(date: Date, fmt = "yyyy-MM-dd hh:mm:ss") {
 }
 
 
-export function convert2RunesName (runeName: string)  {
-  return runeName.replace(/ /g, "•").toUpperCase();
+export function convert2RunesName(runeName: string) {
+  return runeName.replace(/[^a-zA-Z\s•]+/, '').replace(/ /g, "•").toUpperCase()
 }

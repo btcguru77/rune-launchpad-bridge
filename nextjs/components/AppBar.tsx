@@ -41,6 +41,12 @@ const AppBar = () => {
               />
               RunesBridgeAlpha
             </Link>
+            <Link
+              href="/bridge"
+              className="inline-flex items-center gap-2 rounded-md border-black/5 py-1.5 px-3 text-sm/6 font-semibold text-black shadow-inner shadow-white/10 focus:outline-none hover:bg-black/5 data-[focus]:outline-1 data-[focus]:outline-black"
+            >
+              Bridge
+            </Link>
             <Menu>
               <MenuButton className="inline-flex items-center gap-2 rounded-md border-black/5 py-1.5 px-3 text-sm/6 font-semibold text-black shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-black/5 data-[focus]:outline-1 data-[focus]:outline-black">
                 Runes

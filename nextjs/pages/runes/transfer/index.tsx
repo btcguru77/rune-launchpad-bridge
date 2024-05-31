@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout";
+import TransferRunes from "@/components/Runes/Transfer";
 
 export default function Transfer() {
   return (
     <Layout>
-      <main className={`flex flex-col items-center justify-between p-24`}>
-        <h1>Transfer</h1>
+      <main className={`w-full flex flex-row items-center justify-around p-5`}>
+        <TransferRunes />
       </main>
     </Layout>
   );
